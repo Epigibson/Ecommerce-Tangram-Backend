@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ALLOWED_HEADERS: Set[str] = {"*"}
     ALLOWED_CREDENTIALS: bool = True
 
-    PROJECT_NAME: str = "Sports Manager"
+    PROJECT_NAME: str = "Template FastAPI and MongoDB"
 
     SENDGRID_API_KEY = config("SENDGRID_API_KEY")
     ACCOUNT_SID = config("ACCOUNT_SID")
