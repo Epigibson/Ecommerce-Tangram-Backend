@@ -1,15 +1,16 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
+
+
+class PaymentInfo:
+    id: str
 
 
 class PaymentData(BaseModel):
-    """
-    Create Payment Data Schema
-    """
     action: str
     api_version: str
     data: dict
     date_created: str
-    id: int
+    id: str
     live_mode: bool
     type: str
     user_id: int

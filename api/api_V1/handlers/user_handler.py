@@ -28,10 +28,8 @@ async def create_user(data: UserAuth):
         )
 
 
-@user_router.post('/create_system_user_manager', summary="Create new system user manager",
-                  tags=["User"])
-async def create_system_user_manager(data: SystemUserCreate,
-                                     owner: User = Depends(get_current_user)):
+@user_router.post('/create_system_user_manager', summary="Create new system user manager", tags=["User"])
+async def create_system_user_manager(data: SystemUserCreate, owner: User = Depends(get_current_user)):
     try:
         result = await UserService.create_user_system(data, "Manager", owner)
         return result
@@ -42,11 +40,22 @@ async def create_system_user_manager(data: SystemUserCreate,
         )
 
 
-@user_router.post('/create_system_user_admin', summary="Create new system user admin",
-                  tags=["User"])
+@user_router.post('/create_system_user_admin', summary="Create new system user admin", tags=["User"])
 async def create_system_user_admin(data: SystemUserCreate, owner: User = Depends(get_current_user)):
     try:
         result = await UserService.create_user_system(data, "Admin", owner)
+        return result
+    except pymongo.errors.DuplicateKeyError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="The user with that username or email already exists."
+        )
+
+
+@user_router.post('/create_couch', summary="Create couch user.", tags=["User"])
+async def create_couch(data: UserAuth, owner: User = Depends(get_current_user)):
+    try:
+        result = await UserService.create_couch(data, owner)
         return result
     except pymongo.errors.DuplicateKeyError:
         raise HTTPException(
@@ -117,8 +126,7 @@ async def list_users():
         )
 
 
-@user_router.get('/list_as_admin', summary='Get all users without authentication as admin.',
-                 tags=["User"])
+@user_router.get('/list_as_admin', summary='Get all users without authentication as admin.', tags=["User"])
 async def list_users_as_admin():
     try:
         result = UserService.get_all_users_as_admin()
@@ -130,9 +138,32 @@ async def list_users_as_admin():
         )
 
 
+@user_router.get('/list/inscribed_and_active/', summary='Get all users inscribed and active.', tags=["User"])
+async def list_users_inscribed_and_active():
+    try:
+        result = UserService.get_users_inscribed_and_active()
+        return await result
+    except pymongo.errors.OperationFailure:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="There are not user entries."
+        )
+
+
+@user_router.get('/list/couches', summary='Get all couches.', tags=["User"])
+async def list_couches(data: Optional[FilterDates] = None):
+    try:
+        result = UserService.get_couches(data)
+        return await result
+    except pymongo.errors.OperationFailure:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="There are not couches."
+        )
+
+
 @user_router.put('/update/admin/{user_id}', summary='Update user by ID.', tags=["User"])
-async def update_user_as_admin(user_id: UUID, data: UserUpdate,
-                               owner: User = Depends(get_current_user)):
+async def update_user_as_admin(user_id: UUID, data: UserUpdate, owner: User = Depends(get_current_user)):
     try:
         result = UserService.update_user(user_id, data, owner)
         return await result
@@ -147,8 +178,7 @@ async def update_user_as_admin(user_id: UUID, data: UserUpdate,
 async def add_balance_to_user(user_id: UUID, balance_amount: float, payment_method,
                               owner: User = Depends(get_current_user)):
     try:
-        result = UserService.add_balance_amount_to_user(user_id, balance_amount, payment_method,
-                                                        owner)
+        result = UserService.add_balance_amount_to_user(user_id, balance_amount, payment_method, owner)
         return await result
     except pymongo.errors.OperationFailure:
         raise HTTPException(
@@ -157,13 +187,11 @@ async def add_balance_to_user(user_id: UUID, balance_amount: float, payment_meth
         )
 
 
-@user_router.put('/update_balance/{user_id}', summary='Update balance to user by ID.',
-                 tags=["User"])
+@user_router.put('/update_balance/{user_id}', summary='Update balance to user by ID.', tags=["User"])
 async def update_balance_to_user(user_id: UUID, balance_amount: float, payment_method,
                                  owner: User = Depends(get_current_user)):
     try:
-        result = UserService.update_balance_amount_to_user(user_id, balance_amount, payment_method,
-                                                           owner)
+        result = UserService.update_balance_amount_to_user(user_id, balance_amount, payment_method, owner)
         return await result
     except pymongo.errors.OperationFailure:
         raise HTTPException(
@@ -172,8 +200,7 @@ async def update_balance_to_user(user_id: UUID, balance_amount: float, payment_m
         )
 
 
-@user_router.put('/subtract_balance/{user_id}', summary='Subtract balance to user by ID.',
-                 tags=["User"])
+@user_router.put('/subtract_balance/{user_id}', summary='Subtract balance to user by ID.', tags=["User"])
 async def subtract_balance_to_user(user_id: UUID, balance_amount: float):
     try:
         result = UserService.subtract_balance_amount_to_user(user_id, balance_amount)

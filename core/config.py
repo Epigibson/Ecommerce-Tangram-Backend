@@ -16,15 +16,11 @@ class Settings(BaseSettings):
     ALLOWED_HEADERS: Set[str] = {"*"}
     ALLOWED_CREDENTIALS: bool = True
 
-    PROJECT_NAME: str = "Template with FastAPI and MongoDB"
+    PROJECT_NAME: str = "Sports Manager"
 
     SENDGRID_API_KEY = config("SENDGRID_API_KEY")
     ACCOUNT_SID = config("ACCOUNT_SID")
     AUTH_TOKEN = config("AUTH_TOKEN")
-
-    TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
-    TWILIO_NUMBER = config("TWILIO_NUMBER")
 
     CLOUDINARY_CLOUD_NAME = config("CLOUDINARY_CLOUD_NAME")
     CLOUDINARY_API_KEY = config("CLOUDINARY_API_KEY")
