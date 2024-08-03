@@ -5,7 +5,8 @@ from services.send_notification_services import SendNotificationService
 notification_router = APIRouter()
 
 
-@notification_router.post('/send_notification_email', summary="Send notification", tags=["Notification"])
+@notification_router.post('/send_notification_email', summary="Send notification",
+                          tags=["Notification"])
 async def send_notification_email(dynamic_recipient: str,
                                   dynamic_action: str,
                                   dynamic_amount: str,
@@ -27,13 +28,15 @@ async def send_notification_email(dynamic_recipient: str,
     return {"message": "Notification sent successfully"}
 
 
-@notification_router.post('/send_notification_email/test', summary="Send notification test", tags=["Notification"])
+@notification_router.post('/send_notification_email/test', summary="Send notification test",
+                          tags=["Notification"])
 async def send_notification_email_test(recipients: list[str], subject: str):
     result = SendNotificationService.send_email_notification_test(recipients, subject)
     return result
 
 
-@notification_router.post('/send_notification_whatsapp', summary="Send notification", tags=["Notification"])
+@notification_router.post('/send_notification_whatsapp', summary="Send notification",
+                          tags=["Notification"])
 async def send_notification_whats(notification: NotificationCreate):
     recipients = notification.recipients
     body = notification.message

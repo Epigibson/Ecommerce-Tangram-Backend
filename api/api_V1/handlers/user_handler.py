@@ -71,7 +71,7 @@ async def get_user_by_object_id(user_id: PydanticObjectId):
     except pymongo.errors.OperationFailure:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="There is not user whith that ID."
+            detail="There is not user with that ID."
         )
 
 
@@ -87,7 +87,8 @@ async def list_users():
         )
 
 
-@user_router.get('/list_as_admin', summary='Get all users without authentication as admin.', tags=["User"])
+@user_router.get('/list_as_admin', summary='Get all users without authentication as admin.',
+                 tags=["User"])
 async def list_users_as_admin():
     try:
         result = UserService.get_all_users_as_admin()
@@ -100,7 +101,8 @@ async def list_users_as_admin():
 
 
 @user_router.put('/update/admin/{user_id}', summary='Update user by ID.', tags=["User"])
-async def update_user_as_admin(user_id: UUID, data: UserUpdate, owner: User = Depends(get_current_user)):
+async def update_user_as_admin(user_id: UUID, data: UserUpdate,
+                               owner: User = Depends(get_current_user)):
     try:
         result = UserService.update_user(user_id, data, owner)
         return await result

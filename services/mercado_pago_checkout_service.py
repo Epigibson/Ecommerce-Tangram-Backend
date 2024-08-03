@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 import mercadopago
@@ -10,7 +11,7 @@ from models.user_model import User
 class MercadoPagoService:
 
     @staticmethod
-    async def create_preference(products: list[PydanticObjectId], user_id: UUID):
+    async def create_preference(user_id: UUID, products: Optional[list[PydanticObjectId]] = None):
         # user = await User.find_one(User.user_id == user_id)
         # sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
         # items = []
