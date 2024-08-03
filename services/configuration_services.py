@@ -1,4 +1,3 @@
-from uuid import UUID
 from fastapi import HTTPException, status
 from models.configurations_model import Configurations
 from schemas.configurations_schema import ConfigurationsCreate, ConfigurationsUpdate

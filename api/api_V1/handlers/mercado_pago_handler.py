@@ -1,9 +1,7 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from api.deps.user_deps import get_current_user
-from models.user_model import User
 from services.mercado_pago_checkout_service import MercadoPagoService
 
 mercado_pago_router = APIRouter()

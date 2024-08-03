@@ -1,6 +1,5 @@
 from uuid import UUID
 
-from models.permission_model import Permission
 from models.role_model import Role
 from schemas.role_schema import RoleCreate, RoleUpdate
 
