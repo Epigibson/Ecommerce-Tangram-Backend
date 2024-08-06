@@ -13,25 +13,17 @@ class RoleCreate(BaseModel):
     permissions: Optional[list[Link[Permission]]] = []
 
     class Config:
-        orm_mode = True
         schema_extra = {
             "example": {
                 "name": "Admin",
-                "description": "This is an Admin role",
-                "permissions": ['65d662f3751e027f07175ae0', '65d662fd751e027f07175ae1', '65d66305751e027f07175ae2'],
+                "description": "Rol de administrador con acceso completo al sistema",
+                "permissions": [
+                    "65d662f3751e027f07175ae0",
+                    "65d662fd751e027f07175ae1",
+                    "65d66305751e027f07175ae2"
+                ],
             }
         }
-        arbitrary_types_allowed = True
-        json_encoders = {
-            UUID: str,
-        }
-        allow_population_by_field_name = True
-        validate_assignment = True
-        extra = "forbid"
-        exclude_unset = True
-        underscore_attrs_are_private = True
-        keep_untouched = (Link,)
-        use_enum_values = True
 
 
 class RolOut(BaseModel):

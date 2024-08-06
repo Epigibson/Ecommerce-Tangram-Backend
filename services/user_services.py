@@ -31,8 +31,18 @@ class UserService:
             username=generate_username,
             hashed_password=get_password(user.password) if user.password else None,
             role=user.role if user.role else normal_role,
-            mobile=user.mobile,
             phone=user.phone,
+            name=user.name,
+            gender=user.gender,
+            status=user.status,
+            birthday=user.birthday,
+            street_name=user.street_name,
+            street_number=user.street_number,
+            zip_code=user.zip_code,
+            colony=user.colony,
+            city=user.city,
+            country=user.country,
+            user_type=Usertype.user,
         ) if not email_verification_user else email_verification_user
 
         if not email_verification_user:

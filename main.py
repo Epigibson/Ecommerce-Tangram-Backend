@@ -27,13 +27,12 @@ class CustomFastAPI(FastAPI):
     periodic_task: Optional[asyncio.Task] = None
 
 
-app = CustomFastAPI(
+app = FastAPI(
     title=settings.PROJECT_NAME,
     description=DESCRIPTION,
     version="1.0.0(Alpha)",
     openapi_tags=tags_metadata,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    debug=False
 )
 
 # Prometheus metrics
@@ -44,10 +43,7 @@ REQUEST_LATENCY = Histogram('request_latency_seconds', 'Request latency in secon
 
 
 @app.get("/", summary="Welcome!", tags=["Home"])
-@REQUEST_TIME.time()
-@REQUEST_IN_PROGRESS.track_inprogress()
 async def read_root():
-    REQUEST_COUNTER.inc()
     return {"QUE ONDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}
 
 
@@ -74,21 +70,6 @@ async def app_init():
 
     # Iniciar la tarea periódica
     app.periodic_task = asyncio.create_task(periodic_task_runner())
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    # Cancelar la tarea periódica
-    if app.periodic_task:
-        app.periodic_task.cancel()
-        try:
-            await app.periodic_task
-        except asyncio.CancelledError:
-            pass
-
-    # Cerrar la conexión con MongoDB
-    if app.mongodb_client:
-        app.mongodb_client.close()
 
 
 # Mount the Prometheus metrics endpoint

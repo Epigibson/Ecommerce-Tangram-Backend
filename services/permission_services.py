@@ -1,4 +1,7 @@
 from uuid import UUID
+
+from fastapi import HTTPException, status
+
 from models.permission_model import Permission
 from schemas.permission_schema import PermissionCreate, PermissionUpdate
 
@@ -7,14 +10,37 @@ class PermissionServices:
 
     @staticmethod
     async def create(data: PermissionCreate):
-        result = Permission(**data.dict())
-        await result.insert()
-        return result
+        try:
+            result = Permission(**data.dict())
+            await result.insert()
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(e),
+            )
+        return {
+            "message": "Permission created successfully",
+            "result": result
+        }
 
     @staticmethod
     async def retrieve(permission_id: UUID):
-        result = await Permission.find_one(Permission.permission_id == permission_id)
-        return result
+        try:
+            result = await Permission.find_one(Permission.permission_id == permission_id)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(e),
+            )
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Permission not found"
+            )
+        return {
+            "message": "Permission retrieved successfully",
+            "result": result
+        }
 
     @staticmethod
     async def list():
